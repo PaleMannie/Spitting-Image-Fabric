@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "spittingimage",
+  "version": "${version}",
+
+  "name": "Spitting Image",
+  "description": "Have you ever disliked something ingame so much that you had to spit at it?",
+  "authors": [
+    "Me!"
+  ],
+  "contact": {
+    "homepage": "https://fabricmc.net/",
+    "sources": "https://github.com/PaleMannie/Spitting_Image"
+  },
+
+  "license": "MIT",
+  "icon": "assets/spittingimage/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "mett.palemannie.spittingimage.SpittingImage"
+    ]
+  },
+  "mixins": [
+    "spittingimage.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.14.6",
+    "fabric": "*",
+    "minecraft": "~1.18.2",
+    "java": ">=17"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}
