@@ -6,7 +6,7 @@
   "name": "Spitting Image",
   "description": "Have you ever disliked something ingame so much that you had to spit at it?",
   "authors": [
-    "Me!"
+    "Pale Mannie/Manfred Blasser"
   ],
   "contact": {
     "homepage": "https://fabricmc.net/",
@@ -14,12 +14,15 @@
   },
 
   "license": "MIT",
-  "icon": "assets/spittingimage/icon.png",
+  "icon": "assets/spittingimage/spittingimage.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
       "mett.palemannie.spittingimage.SpittingImage"
+    ],
+    "client": [
+      "mett.palemannie.spittingimage.SpittingImageClient"
     ]
   },
   "mixins": [
