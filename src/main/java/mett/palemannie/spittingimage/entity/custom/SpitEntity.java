@@ -7,11 +7,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageSources;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.Packet;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
@@ -50,7 +49,7 @@ public class SpitEntity extends ThrownItemEntity {
         super.onEntityHit(entityHitResult);
         Entity entity = this.getOwner();
         if (entity instanceof LivingEntity) {
-            entityHitResult.getEntity().damage(DamageSource.mobProjectile(this, (LivingEntity)entity).setProjectile(), 1.0F);
+            entityHitResult.getEntity().damage(DamageSources.mobProjectile(this, (LivingEntity) entity).setProjectile(), 1.0F);
         }
     }
 
@@ -66,8 +65,8 @@ public class SpitEntity extends ThrownItemEntity {
         return ModItems.SPIT_PROJECTILE;
     }
 
-    @Override
+    /*@Override
     public Packet<?> createSpawnPacket() {
         return new EntitySpawnS2CPacket(this);
-    }
+    }*/
 }
