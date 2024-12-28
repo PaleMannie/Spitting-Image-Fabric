@@ -18,7 +18,6 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
 
-
 public class SpitEntity extends ThrownItemEntity {
     public SpitEntity(EntityType<? extends ThrownItemEntity> entityType, World world) {
         super(entityType, world);
@@ -49,10 +48,11 @@ public class SpitEntity extends ThrownItemEntity {
     }
 
     protected void onEntityHit(EntityHitResult entityHitResult) {
-        super.onEntityHit(entityHitResult);
-        Entity entity = this.getOwner();
-        if (entity instanceof LivingEntity) {
-            entityHitResult.getEntity().damage(DamageSource.mobProjectile(this, (LivingEntity)entity).setProjectile(), 1.0F);
+        Entity owner = getOwner();
+
+        if (owner instanceof LivingEntity) {
+            DamageSource damageSource = this.getDamageSources().mobProjectile(this, (LivingEntity) owner);
+            entityHitResult.getEntity().damage(damageSource, 1.0F);
         }
     }
 
