@@ -1,10 +1,9 @@
 package mett.palemannie.spittingimage.event;
 
-import mett.palemannie.spittingimage.net.ModMessages;
+import mett.palemannie.spittingimage.net.SpitC2SPacket;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
@@ -38,7 +37,7 @@ public class KeyInputHandler {
                 long currentTime = System.currentTimeMillis();
 
                 if (!cooldownMap.containsKey(playerId) || (currentTime - cooldownMap.get(playerId) >= COOLDOWN_TIME)) {
-                    ClientPlayNetworking.send(ModMessages.SPITTING, PacketByteBufs.create());
+                    ClientPlayNetworking.send(new SpitC2SPacket());
                     cooldownMap.put(playerId, currentTime);
                 }
             }

@@ -1,14 +1,32 @@
 package mett.palemannie.spittingimage.net;
 
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
+import mett.palemannie.spittingimage.SpittingImage;
+import mett.palemannie.spittingimage.item.ModItems;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.registry.Registries;
+import net.minecraft.util.Identifier;
 
-public class SpitC2SPacket {
-    public static void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
+public record SpitC2SPacket() implements CustomPayload {
 
-        ServerPlayHandler.handleSpitting(player);
+    private static Identifier spitId = Registries.ITEM.getId(ModItems.SPIT_PROJECTILE);
+    public static final CustomPayload.Id<SpitC2SPacket> ID = new CustomPayload.Id<>(Identifier.of(SpittingImage.MODID, spitId.getPath()));
+    public static final PacketCodec<RegistryByteBuf, SpitC2SPacket> PACKET_CODEC = PacketCodec.of(SpitC2SPacket::encode, SpitC2SPacket::decode);
+
+    @Override
+    public Id<? extends CustomPayload> getId() {
+        return ID;
+    }
+
+    public static void encode(SpitC2SPacket packet, RegistryByteBuf buf) {}
+
+    public static SpitC2SPacket decode(RegistryByteBuf buf) {
+        return new SpitC2SPacket();
+    }
+
+    public static void initializePacket() {
+        PayloadTypeRegistry.playC2S().register(SpitC2SPacket.ID, SpitC2SPacket.PACKET_CODEC);
     }
 }
