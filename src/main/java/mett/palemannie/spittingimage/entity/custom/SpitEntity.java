@@ -39,12 +39,12 @@ public class SpitEntity extends ThrownItemEntity {
         super.tick();
 
         if (this.isInsideWaterOrBubbleColumn()) this.discard();
-        else if (this.world.getStatesInBox(this.getBoundingBox()).noneMatch(AbstractBlock.AbstractBlockState::isAir)) this.discard();
+        else if (this.getWorld().getStatesInBox(this.getBoundingBox()).noneMatch(AbstractBlock.AbstractBlockState::isAir)) this.discard();
 
         if (this.age % 7 == 0) {
-            world.addParticle(ParticleTypes.SPIT, this.getX(), this.getY() + 0.2, this.getZ(), 0d, 0d, 0d);
+            getWorld().addParticle(ParticleTypes.SPIT, this.getX(), this.getY() + 0.2, this.getZ(), 0d, 0d, 0d);
         }
-        world.addParticle(ParticleTypes.SPLASH, this.getX(), this.getY() + 0.2, this.getZ(), 0d, 0d, 0d);
+        getWorld().addParticle(ParticleTypes.SPLASH, this.getX(), this.getY() + 0.2, this.getZ(), 0d, 0d, 0d);
     }
 
     protected void onEntityHit(EntityHitResult entityHitResult) {
@@ -59,7 +59,7 @@ public class SpitEntity extends ThrownItemEntity {
 
     protected void onBlockHit(BlockHitResult blockHitResult) {
         super.onBlockHit(blockHitResult);
-        if (!this.world.isClient) {
+        if (!this.getWorld().isClient) {
             this.discard();
         }
     }

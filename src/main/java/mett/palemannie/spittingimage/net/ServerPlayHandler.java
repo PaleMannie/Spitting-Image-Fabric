@@ -15,7 +15,7 @@ public class ServerPlayHandler {
 
     public static void handleSpitting(ServerPlayerEntity player){
 
-        ServerWorld sevel = player.getWorld().toServerWorld();
+        ServerWorld sevel = player.getServerWorld();
         Random rdm = new Random();
 
         ///Entity
@@ -25,7 +25,7 @@ public class ServerPlayHandler {
         sevel.spawnEntity(spit);
 
         ///Sound
-        World lvl = player.world;
+        World lvl = player.getWorld();
         float r = 0.8f + lvl.random.nextFloat() * 0.3f;
         lvl.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_LLAMA_SPIT, SoundCategory.BLOCKS, 1f, r);
 
