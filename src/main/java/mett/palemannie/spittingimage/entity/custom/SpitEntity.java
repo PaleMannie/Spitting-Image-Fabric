@@ -7,37 +7,45 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.*;
-import net.minecraft.entity.mob.BlazeEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
 
 public class SpitEntity extends ThrownItemEntity {
-    /*public SpitEntity(EntityType<? extends ThrownItemEntity> entityType, World world) {
-        super(entityType, world);
-    }*/
+    public SpitEntity(EntityType<? extends SpitEntity> entityType, World world) {
+        super((EntityType<? extends ThrownItemEntity>)entityType, world);
+    }
+
     public SpitEntity(LivingEntity livingEntity, World world) {
-        super(ModEntities.SPIT_PROJECTILE, world);
+        super(ModEntities.SPIT_PROJECTILE, livingEntity, world);
     }
-    public SpitEntity(World pLevel, LivingEntity livingEntity, ItemStack stack) {
-        this(livingEntity.getX(), livingEntity.getEyeY() - 0.10000000149011612, livingEntity.getZ(), pLevel, stack);
-        this.setOwner(livingEntity);
+
+    public SpitEntity(EntityType<? extends ThrownItemEntity> entityType, World world) {
+        super(entityType, world);
     }
-    public SpitEntity(double x, double y, double z, World pLevel, ItemStack stack) {
-        super(ModEntities.SPIT_PROJECTILE, x, y, z, pLevel, stack);
+
+    public SpitEntity(World world, LivingEntity owner, ItemStack stack) {
+        this(owner.getX(), owner.getEyeY() - 0.1f, owner.getZ(), world, stack);
+        this.setOwner(owner);
+    }
+
+    public SpitEntity(double x, double y, double z, World world, ItemStack stack) {
+        super(ModEntities.SPIT_PROJECTILE, x, y, z, world, stack);
         this.setItem(stack);
     }
 
-    public SpitEntity(EntityType<Entity> entityEntityType, World world) {
-        super(ModEntities.SPIT_PROJECTILE, world);
+    public SpitEntity(EntityType<? extends ThrownItemEntity> type, LivingEntity owner, World world, ItemStack stack) {
+        super(type, owner, world, stack);
+    }
+
+    public SpitEntity(EntityType<SpitEntity> entityEntityType, World world) {
+        super(entityEntityType, world);
 
     }
 
@@ -77,8 +85,4 @@ public class SpitEntity extends ThrownItemEntity {
         return ModItems.SPIT_PROJECTILE;
     }
 
-    /*@Override
-    public Packet<?> createSpawnPacket() {
-        return new EntitySpawnS2CPacket(this);
-    }*/
 }
