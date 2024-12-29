@@ -3,6 +3,7 @@ package mett.palemannie.spittingimage.entity.custom;
 import mett.palemannie.spittingimage.entity.ModEntities;
 import mett.palemannie.spittingimage.item.ModItems;
 import net.minecraft.block.AbstractBlock;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -13,25 +14,31 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
 
 public class SpitEntity extends ThrownItemEntity {
-    public SpitEntity(EntityType<? extends ThrownItemEntity> entityType, World world) {
+    /*public SpitEntity(EntityType<? extends ThrownItemEntity> entityType, World world) {
         super(entityType, world);
-    }
+    }*/
     public SpitEntity(LivingEntity livingEntity, World world) {
-        super(ModEntities.SPIT_PROJECTILE, livingEntity, world);
+        super(ModEntities.SPIT_PROJECTILE, world);
     }
     public SpitEntity(World pLevel, LivingEntity livingEntity, ItemStack stack) {
         this(livingEntity.getX(), livingEntity.getEyeY() - 0.10000000149011612, livingEntity.getZ(), pLevel, stack);
         this.setOwner(livingEntity);
     }
     public SpitEntity(double x, double y, double z, World pLevel, ItemStack stack) {
-        super(ModEntities.SPIT_PROJECTILE, x, y, z, pLevel);
+        super(ModEntities.SPIT_PROJECTILE, x, y, z, pLevel, stack);
         this.setItem(stack);
+    }
+
+    public SpitEntity(EntityType<Entity> entityEntityType, World world) {
+        super(ModEntities.SPIT_PROJECTILE, world);
+
     }
 
     @Override
@@ -51,8 +58,9 @@ public class SpitEntity extends ThrownItemEntity {
         Entity owner = getOwner();
 
         if (owner instanceof LivingEntity) {
+            ServerWorld serverWorld = MinecraftClient.getInstance().world.getServer().getOverworld();
             DamageSource damageSource = this.getDamageSources().mobProjectile(this, (LivingEntity) owner);
-            entityHitResult.getEntity().damage(damageSource, 1.0F);
+            entityHitResult.getEntity().damage(serverWorld, damageSource, 1.0F);
         }
     }
 
