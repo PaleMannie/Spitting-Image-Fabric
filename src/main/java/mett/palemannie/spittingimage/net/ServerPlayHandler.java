@@ -1,6 +1,8 @@
 package mett.palemannie.spittingimage.net;
 
 import mett.palemannie.spittingimage.entity.custom.SpitEntity;
+import mett.palemannie.spittingimage.item.ModItems;
+import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -19,7 +21,7 @@ public class ServerPlayHandler {
         Random rdm = new Random();
 
         ///Entity
-        SpitEntity spit = new SpitEntity(player, sevel);
+        SpitEntity spit = new SpitEntity(player, sevel, new ItemStack(ModItems.SPIT_PROJECTILE));
         float re = (float)rdm.nextInt(4500,5000)/10000;
         spit.setVelocity(player, player.getPitch(), player.getYaw(), 0f, re,1f);
         sevel.spawnEntity(spit);
