@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "spittingimage:item/spit_projectile"
+  }
+}
