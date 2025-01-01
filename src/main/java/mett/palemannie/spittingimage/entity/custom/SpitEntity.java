@@ -1,6 +1,5 @@
 package mett.palemannie.spittingimage.entity.custom;
 
-import mett.palemannie.spittingimage.entity.ModEntities;
 import mett.palemannie.spittingimage.item.ModItems;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.entity.Entity;
@@ -9,7 +8,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.particle.ParticleTypes;
@@ -20,17 +18,6 @@ import net.minecraft.world.World;
 public class SpitEntity extends ThrownItemEntity {
     public SpitEntity(EntityType<? extends ThrownItemEntity> entityType, World world) {
         super(entityType, world);
-    }
-    public SpitEntity(LivingEntity livingEntity, World world) {
-        super(ModEntities.SPIT_PROJECTILE, livingEntity, world);
-    }
-    public SpitEntity(World pLevel, LivingEntity livingEntity, ItemStack stack) {
-        this(livingEntity.getX(), livingEntity.getEyeY() - 0.10000000149011612, livingEntity.getZ(), pLevel, stack);
-        this.setOwner(livingEntity);
-    }
-    public SpitEntity(double x, double y, double z, World pLevel, ItemStack stack) {
-        super(ModEntities.SPIT_PROJECTILE, x, y, z, pLevel);
-        this.setItem(stack);
     }
 
     @Override
@@ -51,6 +38,9 @@ public class SpitEntity extends ThrownItemEntity {
         Entity entity = this.getOwner();
         if (entity instanceof LivingEntity) {
             entityHitResult.getEntity().damage(DamageSource.mobProjectile(this, (LivingEntity)entity).setProjectile(), 1.0F);
+        }
+        if (!this.world.isClient) {
+            this.discard();
         }
     }
 

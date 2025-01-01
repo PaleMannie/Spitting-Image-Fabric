@@ -11,7 +11,12 @@ import net.minecraft.util.registry.Registry;
 
 public class ModEntities {
 
-    public static final EntityType<SpitEntity> SPIT_PROJECTILE = Registry.register(Registry.ENTITY_TYPE,
-            new Identifier(SpittingImage.MODID, "spit_projectile"), FabricEntityTypeBuilder.<SpitEntity>create(SpawnGroup.MISC, SpitEntity::new)
-                    .dimensions(EntityDimensions.fixed(0.2f, 0.2f)).build());
+    public static EntityType<SpitEntity> SPIT_PROJECTILE;
+
+    public static void registerEntities() {
+        SPIT_PROJECTILE = Registry.register(Registry.ENTITY_TYPE,
+                new Identifier(SpittingImage.MODID, "spit_projectile"),
+                FabricEntityTypeBuilder.create(SpawnGroup.MISC, SpitEntity::new)
+                        .dimensions(EntityDimensions.fixed(0.2f, 0.2f)).build());
+    }
 }
