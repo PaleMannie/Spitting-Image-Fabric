@@ -11,7 +11,7 @@ import net.minecraft.util.Identifier;
 
 public record SpitC2SPacket() implements CustomPayload {
 
-    private static Identifier spitId = Registries.ITEM.getId(ModItems.SPIT_PROJECTILE);
+    private static final Identifier spitId = Registries.ITEM.getId(ModItems.SPIT_PROJECTILE);
     public static final CustomPayload.Id<SpitC2SPacket> ID = new CustomPayload.Id<>(Identifier.of(SpittingImage.MODID, spitId.getPath()));
     public static final PacketCodec<RegistryByteBuf, SpitC2SPacket> PACKET_CODEC = PacketCodec.of(SpitC2SPacket::encode, SpitC2SPacket::decode);
 
