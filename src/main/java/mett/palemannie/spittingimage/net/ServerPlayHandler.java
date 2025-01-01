@@ -10,14 +10,9 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.Random;
-
 public class ServerPlayHandler {
 
     public static void handleSpitting(ServerPlayerEntity player){
-
-        ServerWorld sevel = player.getServerWorld();
-        Random rdm = new Random();
 
         ///Entity
         World world = player.getWorld();
