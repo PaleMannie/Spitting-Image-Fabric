@@ -1,5 +1,6 @@
 package mett.palemannie.spittingimage;
 
+import mett.palemannie.spittingimage.entity.ModEntities;
 import mett.palemannie.spittingimage.item.ModItems;
 import mett.palemannie.spittingimage.net.ModMessages;
 import net.fabricmc.api.ModInitializer;
@@ -14,6 +15,7 @@ public class SpittingImage implements ModInitializer {
 	public void onInitialize() {
 		LOGGER.info("Spitting Image");
 
+		ModEntities.registerEntities();
 		ModItems.registerModItems();
 		ModMessages.registerC2SPackets();
 
