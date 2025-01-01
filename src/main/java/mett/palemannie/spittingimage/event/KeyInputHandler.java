@@ -1,6 +1,7 @@
 package mett.palemannie.spittingimage.event;
 
 import mett.palemannie.spittingimage.net.ModMessages;
+import mett.palemannie.spittingimage.net.ServerPlayHandler;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -9,6 +10,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.HashMap;

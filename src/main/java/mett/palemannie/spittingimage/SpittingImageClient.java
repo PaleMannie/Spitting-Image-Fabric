@@ -12,7 +12,6 @@ public class SpittingImageClient implements ClientModInitializer {
     public void onInitializeClient() {
 
         KeyInputHandler.register();
-
         EntityRendererRegistry.register(ModEntities.SPIT_PROJECTILE, FlyingItemEntityRenderer::new);
         ModMessages.registerS2CPackets();
 
