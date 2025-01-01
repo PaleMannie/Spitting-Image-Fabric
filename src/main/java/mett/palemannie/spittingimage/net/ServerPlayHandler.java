@@ -1,5 +1,6 @@
 package mett.palemannie.spittingimage.net;
 
+import mett.palemannie.spittingimage.entity.ModEntities;
 import mett.palemannie.spittingimage.entity.custom.SpitEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -9,20 +10,20 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.Random;
-
 public class ServerPlayHandler {
 
     public static void handleSpitting(ServerPlayerEntity player){
 
-        ServerWorld sevel = player.getServerWorld();
-        Random rdm = new Random();
+        World world = player.getWorld();
 
-        ///Entity
-        SpitEntity spit = new SpitEntity(player, sevel);
-        float re = (float)rdm.nextInt(4500,5000)/10000;
-        spit.setVelocity(player, player.getPitch(), player.getYaw(), 0f, re,1f);
-        sevel.spawnEntity(spit);
+        if (world instanceof ServerWorld serverWorld) {
+            SpitEntity spitEntity = new SpitEntity(ModEntities.SPIT_PROJECTILE, serverWorld);
+            spitEntity.setOwner(player);
+            spitEntity.setPosition(player.getX(), player.getEyeY() - 0.15f, player.getZ());
+            float velocity = 0.45f + world.random.nextFloat() * 0.1f;
+            spitEntity.setVelocity(player, player.getPitch(), player.getYaw(), 0f, velocity, 1f);
+            serverWorld.spawnEntity(spitEntity);
+        }
 
         ///Sound
         World lvl = player.getWorld();
