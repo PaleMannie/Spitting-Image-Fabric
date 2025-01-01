@@ -1,5 +1,6 @@
 package mett.palemannie.spittingimage;
 
+import mett.palemannie.spittingimage.entity.ModEntities;
 import mett.palemannie.spittingimage.item.ModItems;
 import mett.palemannie.spittingimage.net.ServerPlayHandler;
 import mett.palemannie.spittingimage.net.SpitC2SPacket;
@@ -20,6 +21,7 @@ public class SpittingImage implements ModInitializer {
 	public void onInitialize() {
 		LOGGER.info("Spitting Image");
 
+		ModEntities.registerEntities();
 		ModItems.registerModItems();
 
 		SpitC2SPacket.initializePacket();
