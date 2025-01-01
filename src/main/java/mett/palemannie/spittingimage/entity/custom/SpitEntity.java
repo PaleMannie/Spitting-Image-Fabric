@@ -1,6 +1,5 @@
 package mett.palemannie.spittingimage.entity.custom;
 
-import mett.palemannie.spittingimage.entity.ModEntities;
 import mett.palemannie.spittingimage.item.ModItems;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.entity.Entity;
@@ -9,7 +8,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
@@ -19,9 +17,6 @@ public class SpitEntity extends ThrownItemEntity {
 
     public SpitEntity(EntityType<SpitEntity> entityEntityType, World world) {
         super(entityEntityType, world);
-    }
-    public SpitEntity(LivingEntity owner, World world, ItemStack stack) {
-        super(ModEntities.SPIT_PROJECTILE, owner, world, stack);
     }
 
     @Override
@@ -43,6 +38,9 @@ public class SpitEntity extends ThrownItemEntity {
         if (owner instanceof LivingEntity) {
             DamageSource damageSource = this.getDamageSources().mobProjectile(this, (LivingEntity) owner);
             entityHitResult.getEntity().serverDamage(damageSource, 1.0F);
+        }
+        if (!this.getWorld().isClient) {
+            this.discard();
         }
     }
 
