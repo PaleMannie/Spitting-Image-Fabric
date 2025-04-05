@@ -41,7 +41,7 @@ public class ServerPlayHandler {
 
         if(lvl instanceof ServerWorld slevel) {
             slevel.spawnParticles(ParticleTypes.SPIT, x, y, z, 3, 0d, 0d, 0d,0.15d);
-            slevel.addParticle(ParticleTypes.LARGE_SMOKE, player.getX(), player.getEyeY()-0.15d, player.getZ(), vec3.x, vec3.y, vec3.z);
+            slevel.addParticleClient(ParticleTypes.LARGE_SMOKE, player.getX(), player.getEyeY()-0.15d, player.getZ(), vec3.x, vec3.y, vec3.z);
         }
     }
 }
