@@ -18,7 +18,7 @@ public class ServerPlayHandler {
         World world = player.getWorld();
 
         if (world instanceof ServerWorld serverWorld) {
-            SpitEntity spitEntity = new SpitEntity(ModEntities.SPIT_PROJECTILE, serverWorld);
+            SpitEntity spitEntity = new SpitEntity(ModEntities.SPIT, serverWorld);
             spitEntity.setOwner(player);
             spitEntity.setPosition(player.getX(), player.getEyeY() - 0.15f, player.getZ());
             float velocity = 0.45f + world.random.nextFloat() * 0.1f;
