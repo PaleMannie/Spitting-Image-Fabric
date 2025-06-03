@@ -1,5 +1,6 @@
 package mett.palemannie.spittingimage.entity.custom;
 
+import mett.palemannie.spittingimage.util.ModDamageTypes;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -11,6 +12,7 @@ import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
@@ -64,9 +66,13 @@ public class SpitEntity extends ProjectileEntity {
         Entity owner = getOwner();
 
         Entity entity = this.getOwner();
+        World world = this.getWorld();
         if (entity instanceof LivingEntity livingEntity) {
             entity = entityHitResult.getEntity();
-            DamageSource damageSource = this.getDamageSources().spit(this, livingEntity);
+            DamageSource damageSource = new DamageSource(
+                    world.getRegistryManager()
+                            .get(RegistryKeys.DAMAGE_TYPE)
+                            .entryOf(ModDamageTypes.SPIT_DAMAGE));
             if (entity.damage(damageSource, 1.0F)) {
                 World var6 = this.getWorld();
                 if (var6 instanceof ServerWorld) {
@@ -91,6 +97,7 @@ public class SpitEntity extends ProjectileEntity {
 
     public void onSpawnPacket(EntitySpawnS2CPacket packet) {
         super.onSpawnPacket(packet);
+
         double d = packet.getVelocityX();
         double e = packet.getVelocityY();
         double f = packet.getVelocityZ();

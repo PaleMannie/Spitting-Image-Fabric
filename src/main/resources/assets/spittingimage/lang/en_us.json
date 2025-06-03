@@ -1,4 +1,7 @@
 {
   "key.category.spittingimage.spit": "Spitting Image",
-  "key.spittingimage.spit": "Spit"
+  "key.spittingimage.spit": "Spit",
+
+  "death.attack.spittingimage.spit_damage": "%1$s drowned in their own spit",
+  "death.attack.spittingimage.spit_damage.player": "%2$s disrespected %1$s deeply"
 }
