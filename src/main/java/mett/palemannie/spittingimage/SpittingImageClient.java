@@ -14,8 +14,8 @@ public class SpittingImageClient implements ClientModInitializer {
 
         KeyInputHandler.register();
 
-        EntityModelLayerRegistry.registerModelLayer(SpitModel.SPIT, SpitModel::getTexturedModelData);
         EntityRendererRegistry.register(ModEntities.SPIT, SpitRenderer::new);
+        EntityModelLayerRegistry.registerModelLayer(SpitModel.SPIT, SpitModel::getTexturedModelData);
 
     }
 }

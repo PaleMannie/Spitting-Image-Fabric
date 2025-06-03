@@ -9,6 +9,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
+import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.BlockHitResult;
@@ -86,5 +87,19 @@ public class SpitEntity extends ProjectileEntity {
         if (!this.getWorld().isClient) {
             this.discard();
         }
+    }
+
+    public void onSpawnPacket(EntitySpawnS2CPacket packet) {
+        super.onSpawnPacket(packet);
+        double d = packet.getVelocityX();
+        double e = packet.getVelocityY();
+        double f = packet.getVelocityZ();
+
+        for(int i = 0; i < 3; ++i) {
+            double g = 0.4 + 0.1 * (double)i;
+            this.getWorld().addParticle(ParticleTypes.SPIT, this.getX(), this.getY(), this.getZ(), d * g, e, f * g);
+        }
+
+        this.setVelocity(d, e, f);
     }
 }

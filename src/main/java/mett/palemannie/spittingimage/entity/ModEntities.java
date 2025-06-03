@@ -16,8 +16,7 @@ public class ModEntities {
 
     public static void registerEntities(){
         SPIT = Registry.register(Registries.ENTITY_TYPE,
-                Identifier.of(SpittingImage.MODID, "spit"), FabricEntityTypeBuilder.<SpitEntity>create(SpawnGroup.MISC, SpitEntity::new)
+                Identifier.of(SpittingImage.MODID, "spit_projectile"), FabricEntityTypeBuilder.<SpitEntity>create(SpawnGroup.MISC, SpitEntity::new)
                         .dimensions(EntityDimensions.fixed(0.2f, 0.2f)).build());
-
     }
 }

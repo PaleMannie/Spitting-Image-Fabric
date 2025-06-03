@@ -32,7 +32,7 @@ public class ServerPlayHandler {
         lvl.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_LLAMA_SPIT, SoundCategory.BLOCKS, 1f, r);
 
         ///Particle
-        Vec3d vec3 = player.getRotationVec(1f);
+        /*Vec3d vec3 = player.getRotationVec(1f);
         Vec3d MousePos = player.getEyePos();
 
         double x = player.getX() + vec3.x/4;
@@ -42,6 +42,6 @@ public class ServerPlayHandler {
         if(lvl instanceof ServerWorld slevel) {
             slevel.spawnParticles(ParticleTypes.SPIT, x, y, z, 3, 0d, 0d, 0d,0.15d);
             slevel.addParticle(ParticleTypes.LARGE_SMOKE, player.getX(), player.getEyeY()-0.15d, player.getZ(), vec3.x, vec3.y, vec3.z);
-        }
+        }*/
     }
 }
