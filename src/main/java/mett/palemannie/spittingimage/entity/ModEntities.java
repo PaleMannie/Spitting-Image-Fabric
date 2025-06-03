@@ -12,11 +12,11 @@ import net.minecraft.util.Identifier;
 
 public class ModEntities {
 
-    public static EntityType<SpitEntity> SPIT_PROJECTILE;
+    public static EntityType<SpitEntity> SPIT;
 
     public static void registerEntities() {
-        SPIT_PROJECTILE = Registry.register(Registries.ENTITY_TYPE,
-                new Identifier(SpittingImage.MODID, "spit_projectile"),
+        SPIT = Registry.register(Registries.ENTITY_TYPE,
+                new Identifier(SpittingImage.MODID, "spit"),
                 FabricEntityTypeBuilder.create(SpawnGroup.MISC, SpitEntity::new)
                         .dimensions(EntityDimensions.fixed(0.2f, 0.2f)).build());
     }
