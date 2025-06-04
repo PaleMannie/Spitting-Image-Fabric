@@ -83,8 +83,10 @@ public class SpitEntity extends ProjectileEntity {
                                 .entryOf(ModDamageTypes.SPIT_DAMAGE));
                 entityHitResult.getEntity().damage(damageSource, 1f);
 
-                    Vec3d knockback = this.getVelocity().normalize().multiply(0.4);
-                    livingEntity.takeKnockback(knockback.x, 0.1, knockback.z);
+                    Vec3d knockback = this.getVelocity();
+                    livingEntity.takeKnockback(1/3d,
+                            -knockback.x,
+                            -knockback.z);
 
             }
             else if(entity instanceof ItemFrameEntity itemFrame && !itemFrame.getEntityWorld().isClient()){
@@ -101,8 +103,10 @@ public class SpitEntity extends ProjectileEntity {
 
                     this.discard();
                     if(itemFrame instanceof GlowItemFrameEntity e){
+
                         e.dropItem(Items.GLOW_ITEM_FRAME);
                     } else { itemFrame.dropItem(Items.ITEM_FRAME); }
+
                     itemFrame.kill();
                 }
             }
