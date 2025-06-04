@@ -1,7 +1,7 @@
 package mett.palemannie.spittingimage.net;
 
 import mett.palemannie.spittingimage.SpittingImage;
-import mett.palemannie.spittingimage.item.ModItems;
+import mett.palemannie.spittingimage.entity.ModEntities;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
@@ -11,7 +11,7 @@ import net.minecraft.util.Identifier;
 
 public record SpitC2SPacket() implements CustomPayload {
 
-    private static Identifier spitId = Registries.ITEM.getId(ModItems.SPIT_PROJECTILE);
+    private static Identifier spitId = Registries.ENTITY_TYPE.getId(ModEntities.SPIT);
     public static final CustomPayload.Id<SpitC2SPacket> ID = new CustomPayload.Id<>(Identifier.of(SpittingImage.MODID, spitId.getPath()));
     public static final PacketCodec<RegistryByteBuf, SpitC2SPacket> PACKET_CODEC = PacketCodec.of(SpitC2SPacket::encode, SpitC2SPacket::decode);
 

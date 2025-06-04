@@ -1,11 +1,9 @@
 package mett.palemannie.spittingimage;
 
 import mett.palemannie.spittingimage.entity.ModEntities;
-import mett.palemannie.spittingimage.item.ModItems;
 import mett.palemannie.spittingimage.net.ServerPlayHandler;
 import mett.palemannie.spittingimage.net.SpitC2SPacket;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.slf4j.Logger;
@@ -22,7 +20,6 @@ public class SpittingImage implements ModInitializer {
 		LOGGER.info("Spitting Image");
 
 		ModEntities.registerEntities();
-		ModItems.registerModItems();
 
 		SpitC2SPacket.initializePacket();
 		ServerPlayNetworking.registerGlobalReceiver(SpitC2SPacket.ID, (payload, context) -> {
