@@ -3,7 +3,6 @@ package mett.palemannie.spittingimage.entity.client;
 import mett.palemannie.spittingimage.SpittingImage;
 import mett.palemannie.spittingimage.entity.custom.SpitEntity;
 import net.minecraft.client.model.*;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.render.entity.model.EntityModelLayer;

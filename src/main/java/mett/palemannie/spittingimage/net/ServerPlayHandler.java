@@ -2,12 +2,10 @@ package mett.palemannie.spittingimage.net;
 
 import mett.palemannie.spittingimage.entity.ModEntities;
 import mett.palemannie.spittingimage.entity.custom.SpitEntity;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class ServerPlayHandler {
