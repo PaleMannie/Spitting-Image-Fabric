@@ -1,8 +1,10 @@
 package mett.palemannie.spittingimage;
 
+import eu.midnightdust.lib.config.MidnightConfig;
 import mett.palemannie.spittingimage.entity.ModEntities;
 import mett.palemannie.spittingimage.net.ServerPlayHandler;
 import mett.palemannie.spittingimage.net.SpitC2SPacket;
+import mett.palemannie.spittingimage.util.SpittingImageConfig;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -20,6 +22,7 @@ public class SpittingImage implements ModInitializer {
 		LOGGER.info("Spitting Image");
 
 		ModEntities.registerEntities();
+		MidnightConfig.init(SpittingImage.MODID, SpittingImageConfig.class);
 
 		SpitC2SPacket.initializePacket();
 		ServerPlayNetworking.registerGlobalReceiver(SpitC2SPacket.ID, (payload, context) -> {
