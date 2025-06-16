@@ -2,6 +2,7 @@ package mett.palemannie.spittingimage.entity.client;
 
 import mett.palemannie.spittingimage.SpittingImage;
 import mett.palemannie.spittingimage.entity.custom.SpitEntity;
+import mett.palemannie.spittingimage.util.SpittingImageConfig;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -24,19 +25,21 @@ public class SpitRenderer extends EntityRenderer<SpitEntity, LlamaSpitEntityRend
 
     public void render(LlamaSpitEntityRenderState llamaSpitEntityRenderState, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
 
-        matrixStack.push();
+        if(SpittingImageConfig.enable3dmodel) {
+            matrixStack.push();
 
-        matrixStack.translate(0.0F, 0.1F, 0.0F);
-        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(llamaSpitEntityRenderState.yaw - 90f));
-        matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(llamaSpitEntityRenderState.pitch));
+            matrixStack.translate(0.0F, 0.1F, 0.0F);
+            matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(llamaSpitEntityRenderState.yaw - 90f));
+            matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(llamaSpitEntityRenderState.pitch));
 
-        this.model.setAngles(llamaSpitEntityRenderState);
-        VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntityCutout(TEXTURE));
-        this.model.render(matrixStack, vertexConsumer, i, OverlayTexture.DEFAULT_UV);
+            this.model.setAngles(llamaSpitEntityRenderState);
+            VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntityCutout(TEXTURE));
+            this.model.render(matrixStack, vertexConsumer, i, OverlayTexture.DEFAULT_UV);
 
-        matrixStack.pop();
+            matrixStack.pop();
 
-        super.render(llamaSpitEntityRenderState, matrixStack, vertexConsumerProvider, i);
+            super.render(llamaSpitEntityRenderState, matrixStack, vertexConsumerProvider, i);
+        }
     }
 
     public LlamaSpitEntityRenderState createRenderState() {
