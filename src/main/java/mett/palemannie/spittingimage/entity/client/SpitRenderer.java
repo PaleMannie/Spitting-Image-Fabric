@@ -2,6 +2,7 @@ package mett.palemannie.spittingimage.entity.client;
 
 import mett.palemannie.spittingimage.SpittingImage;
 import mett.palemannie.spittingimage.entity.custom.SpitEntity;
+import mett.palemannie.spittingimage.util.SpittingImageConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.OverlayTexture;
@@ -28,18 +29,20 @@ public class SpitRenderer extends EntityRenderer<SpitEntity> {
 
     public void render(SpitEntity spitEntity, float yaw, float tickDelta, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light) {
 
-        matrixStack.push();
+        if(SpittingImageConfig.enable3dmodel){
+            matrixStack.push();
 
-        matrixStack.translate(0.0F, 0.1f, 0.0F);
+            matrixStack.translate(0.0F, 0.1f, 0.0F);
 
-        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(MathHelper.lerp(tickDelta, spitEntity.prevYaw, spitEntity.getYaw()) + 90.0F));
-        matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(MathHelper.lerp(tickDelta, spitEntity.prevPitch, spitEntity.getPitch())));
+            matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(MathHelper.lerp(tickDelta, spitEntity.prevYaw, spitEntity.getYaw()) + 90.0F));
+            matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(MathHelper.lerp(tickDelta, spitEntity.prevPitch, spitEntity.getPitch())));
 
-        VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntityCutout(TEXTURE));
-        this.model.render(matrixStack, vertexConsumer, light, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
-        matrixStack.pop();
+            VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntityCutout(TEXTURE));
+            this.model.render(matrixStack, vertexConsumer, light, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
+            matrixStack.pop();
 
-        super.render(spitEntity, yaw, tickDelta, matrixStack, vertexConsumerProvider, light);
+            super.render(spitEntity, yaw, tickDelta, matrixStack, vertexConsumerProvider, light);
+        }
     }
 
     public Identifier getTexture(SpitEntity SpitEntity) {

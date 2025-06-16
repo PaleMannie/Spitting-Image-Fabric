@@ -1,12 +1,14 @@
 package mett.palemannie.spittingimage.entity.custom;
 
 import mett.palemannie.spittingimage.util.ModDamageTypes;
+import mett.palemannie.spittingimage.util.SpittingImageConfig;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.decoration.GlowItemFrameEntity;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.entity.decoration.painting.PaintingEntity;
@@ -77,11 +79,13 @@ public class SpitEntity extends ProjectileEntity {
 
             if(entity instanceof LivingEntity livingEntity && (livingEntity.hurtTime == 0 || (player.isCreative() && livingEntity.hurtTime == 0 ))){
 
-                DamageSource damageSource = new DamageSource(
-                        world.getRegistryManager()
-                                .get(RegistryKeys.DAMAGE_TYPE)
-                                .entryOf(ModDamageTypes.SPIT_DAMAGE));
-                entityHitResult.getEntity().damage(damageSource, 1f);
+                float damageAmount = SpittingImageConfig.spitdamage;
+
+                DamageSource source = world.getDamageSources().create(ModDamageTypes.SPIT_DAMAGE, null, null);
+                DamageSource source2 = world.getDamageSources().create(DamageTypes.PLAYER_ATTACK, this.getOwner(), this.getOwner());
+
+                if(!(entity == this.getOwner())){ entityHitResult.getEntity().damage(source2, 0.000000000001f); }
+                entityHitResult.getEntity().damage(source, damageAmount);
 
                     Vec3d knockback = this.getVelocity();
                     livingEntity.takeKnockback(1/3d,

@@ -3,5 +3,13 @@
   "key.spittingimage.spit": "Spucken",
 
   "death.attack.spittingimage.spit_damage": "%1$s ertrank in der eigenen Spucke",
-  "death.attack.spittingimage.spit_damage.player": "%2$s verachtete %1$s zutiefst"
+  "death.attack.spittingimage.spit_damage.player": "%2$s spuckte auf %1$s mit voller Absicht",
+
+  "spittingimage.midnightconfig.damagedesc": "Schaden verursacht durch die Spucke. Standard: 1.0. Bereich: 0 - 3.4028234663852886E38",
+  "spittingimage.midnightconfig.modeldesc": "Wenn eingeschaltet, wird die Spucke angezeigt. Standard: Ja",
+  "spittingimage.midnightconfig.title": "Spitting Image",
+  "spittingimage.midnightconfig.category.text": "Beschreibung",
+  "spittingimage.midnightconfig.spitdamage": "Spuckschaden",
+  "spittingimage.midnightconfig.enable3dmodel": "Schalte Spucke 3D-Modell ein"
+
 }
