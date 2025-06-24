@@ -3,15 +3,22 @@ package mett.palemannie.spittingimage.entity.custom;
 import mett.palemannie.spittingimage.util.ModDamageTypes;
 import mett.palemannie.spittingimage.util.SpittingImageConfig;
 import net.minecraft.block.AbstractBlock;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.decoration.GlowItemFrameEntity;
+import net.minecraft.entity.decoration.ItemFrameEntity;
+import net.minecraft.entity.decoration.painting.PaintingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
@@ -63,25 +70,50 @@ public class SpitEntity extends ProjectileEntity {
     }
 
     protected void onEntityHit(EntityHitResult entityHitResult) {
-        Entity entity = this.getOwner();
+
+        Entity target = entityHitResult.getEntity();
+        Entity owner = this.getOwner();
         World world = this.getWorld();
 
-        if (entity instanceof LivingEntity livingEntity) {
-            entity = entityHitResult.getEntity();
+        if (owner instanceof PlayerEntity) {
 
-            if(world instanceof ServerWorld serverWorld) {
+            if(world instanceof ServerWorld serverWorld && target instanceof LivingEntity) {
 
                 float damageAmount = SpittingImageConfig.spitdamage;
 
                 DamageSource source = world.getDamageSources().create(ModDamageTypes.SPIT_DAMAGE, null, null);
                 DamageSource source2 = world.getDamageSources().create(DamageTypes.PLAYER_ATTACK, this.getOwner(), this.getOwner());
 
-                if (!(entity == this.getOwner())) {
+                if (!(target == this.getOwner())) {
+
                     entityHitResult.getEntity().damage(serverWorld, source2, 0.000000000001f);
                 }
                 entityHitResult.getEntity().damage(serverWorld, source, damageAmount);
             }
+        } if (target instanceof ItemFrameEntity frame && world instanceof ServerWorld serverWorld) {
+
+            ItemStack held = frame.getHeldItemStack();
+
+            if (!held.isEmpty()) {
+
+                ItemStack drop = held.copy();
+                frame.setHeldItemStack(ItemStack.EMPTY, false);
+                world.spawnEntity(new ItemEntity(world, frame.getX(), frame.getY(), frame.getZ(), drop));
+                this.discard();
+            } else {
+
+                Item frameItem = frame instanceof GlowItemFrameEntity ? Items.GLOW_ITEM_FRAME : Items.ITEM_FRAME;
+                world.spawnEntity(new ItemEntity(world, frame.getX(), frame.getY(), frame.getZ(), new ItemStack(frameItem)));
+                frame.kill(serverWorld);
+                this.discard();
+            }
+        } else if(target instanceof PaintingEntity painting && world instanceof ServerWorld serverWorld){
+
+            painting.kill(serverWorld);
+            world.spawnEntity(new ItemEntity(world, painting.getX(), painting.getY(), painting.getZ(), Items.PAINTING.getDefaultStack()));
+            this.discard();
         }
+        this.discard();
     }
 
     protected double getGravity() {
