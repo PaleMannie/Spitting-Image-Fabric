@@ -6,15 +6,26 @@ import net.minecraft.block.AbstractBlock;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.decoration.GlowItemFrameEntity;
+import net.minecraft.entity.decoration.ItemFrameEntity;
+import net.minecraft.entity.decoration.painting.PaintingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
+import net.minecraft.item.ItemConvertible;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -63,25 +74,65 @@ public class SpitEntity extends ProjectileEntity {
     }
 
     protected void onEntityHit(EntityHitResult entityHitResult) {
-        Entity entity = this.getOwner();
+
+        Entity owner = this.getOwner();
+        Entity target = entityHitResult.getEntity();
         World world = this.getWorld();
 
-        if (entity instanceof LivingEntity livingEntity) {
-            entity = entityHitResult.getEntity();
+        if (owner instanceof PlayerEntity) {
 
             if(world instanceof ServerWorld serverWorld) {
 
-                float damageAmount = SpittingImageConfig.spitdamage;
+                if(target instanceof LivingEntity) {
 
-                DamageSource source = world.getDamageSources().create(ModDamageTypes.SPIT_DAMAGE, null, null);
-                DamageSource source2 = world.getDamageSources().create(DamageTypes.PLAYER_ATTACK, this.getOwner(), this.getOwner());
+                    float damageAmount = SpittingImageConfig.spitdamage;
 
-                if (!(entity == this.getOwner())) {
-                    entityHitResult.getEntity().damage(serverWorld, source2, 0.000000000001f);
+                    DamageSource source = world.getDamageSources().create(ModDamageTypes.SPIT_DAMAGE, null, null);
+                    DamageSource source2 = world.getDamageSources().create(DamageTypes.PLAYER_ATTACK, this.getOwner(), this.getOwner());
+
+                    if (!(target == this.getOwner())) {
+
+                        entityHitResult.getEntity().damage(serverWorld, source2, 0.000000000001f);
+                    }
+                    entityHitResult.getEntity().damage(serverWorld, source, damageAmount);
                 }
-                entityHitResult.getEntity().damage(serverWorld, source, damageAmount);
+                else if(target instanceof ItemFrameEntity){
+
+                    if(!((ItemFrameEntity) target).getHeldItemStack().isEmpty()){
+
+                        target.getWorld().spawnEntity(new ItemEntity(target.getWorld(), target.getX(), target.getY(), target.getZ(),
+                                ((ItemFrameEntity) target).getHeldItemStack().copy()));
+                        this.discard();
+                        ((ItemFrameEntity) target).setHeldItemStack(ItemStack.EMPTY);
+                        serverWorld.playSoundFromEntity(target, target, SoundEvents.ENTITY_ITEM_FRAME_REMOVE_ITEM, SoundCategory.AMBIENT, 1f, 1f);
+
+                    }
+                    else {
+
+                        this.discard();
+                        target.kill(serverWorld);
+                        if(target instanceof GlowItemFrameEntity) {
+
+                            target.dropItem(serverWorld,Items.GLOW_ITEM_FRAME);
+                            world.playSound(target, target.getX(), target.getY(), target.getZ(), SoundEvents.ENTITY_GLOW_ITEM_FRAME_BREAK, SoundCategory.AMBIENT, 1f,1f);
+                        }
+                        else {
+
+                            target.dropItem(serverWorld,Items.ITEM_FRAME);
+                            world.playSound(target, target.getX(), target.getY(), target.getZ(), SoundEvents.ENTITY_ITEM_FRAME_BREAK, SoundCategory.AMBIENT, 1f,1f);
+                        }
+                    }
+                }
+                else if(target instanceof PaintingEntity){
+
+                    this.discard();
+                    target.dropItem(serverWorld, Items.PAINTING);
+                    target.kill(serverWorld);
+                    world.playSound(target, target.getX(), target.getY(), target.getZ(), SoundEvents.ENTITY_PAINTING_BREAK, SoundCategory.AMBIENT, 1f,1f);
+                }
             }
         }
+        this.discard();
     }
 
     protected double getGravity() {
