@@ -7,8 +7,14 @@
 
   "spittingimage.midnightconfig.damagedesc": "Damage dealt by the spit when it hits something. Default: 1.0. Range: 0 - 3.4028234663852886E38",
   "spittingimage.midnightconfig.modeldesc": "If enabled, the spit uses a 3D model. Default: Yes",
+  "spittingimage.midnightconfig.cooldowndesc": "Cooldown in ticks between spitting (20 ticks = 1 second). Default: 3, Range: 1 - 2,147,483,646",
+
   "spittingimage.midnightconfig.title": "Spitting Image",
   "spittingimage.midnightconfig.category.text": "Description",
+
   "spittingimage.midnightconfig.spitdamage": "Spit damage",
-  "spittingimage.midnightconfig.enable3dmodel": "Enable player spit model"
+  "spittingimage.midnightconfig.enable3dmodel": "Enable player spit model",
+  "spittingimage.midnightconfig.spitcooldown": "Spit cooldown",
+
+  "spittingimage.spitcooldown": "Can't spit yet, cooldown..."
 }

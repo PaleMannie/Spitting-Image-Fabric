@@ -1,6 +1,7 @@
 package mett.palemannie.spittingimage.event;
 
 import mett.palemannie.spittingimage.net.ModMessages;
+import mett.palemannie.spittingimage.util.SpittingImageConfig;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -18,7 +19,7 @@ import java.util.UUID;
 public class KeyInputHandler {
 
     private static final Map<UUID, Long> cooldownMap = new HashMap<>();
-    private static final long COOLDOWN_TIME = 150;
+    private static final long COOLDOWN_TIME = SpittingImageConfig.spitCooldown*50L;
 
     public static final String KEY_CATEGORY_SPIT = "key.category.spittingimage.spit";
     public static final String KEY_SPIT = "key.spittingimage.spit";

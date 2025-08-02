@@ -2,15 +2,38 @@ package mett.palemannie.spittingimage.net;
 
 import mett.palemannie.spittingimage.entity.ModEntities;
 import mett.palemannie.spittingimage.entity.custom.SpitEntity;
+import mett.palemannie.spittingimage.util.SpittingImageConfig;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class ServerPlayHandler {
 
+    private static final Map<UUID, Integer> spitCooldowns = new HashMap<>();
+
     public static void handleSpitting(ServerPlayerEntity player){
+
+        int currentTick = player.getServerWorld().getServer().getTicks();
+        int cooldown = SpittingImageConfig.spitCooldown; // deine konfigurierbare Zahl
+
+        int lastUsed = spitCooldowns.getOrDefault(player.getUuid(), -cooldown - 1);
+
+        if (currentTick - lastUsed < cooldown) {
+
+            player.sendMessage(Text.translatable("spittingimage.spitcooldown").formatted(Formatting.RED), true);
+            return;
+        }
+
+        // Cooldown aktualisieren
+        spitCooldowns.put(player.getUuid(), currentTick);
 
         ///Entity
         World world = player.getWorld();
