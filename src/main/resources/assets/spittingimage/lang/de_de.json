@@ -7,9 +7,13 @@
 
   "spittingimage.midnightconfig.damagedesc": "Schaden verursacht durch die Spucke. Standard: 1.0. Bereich: 0 - 3.4028234663852886E38",
   "spittingimage.midnightconfig.modeldesc": "Wenn eingeschaltet, wird die Spucke angezeigt. Standard: Ja",
+  "spittingimage.midnightconfig.cooldowndesc": "Abklingzeit in Ticks nach dem Spucken (20 Ticks = 1 Sekunde). Standard: 3, Bereich: 1 - 2,147,483,646",
+
   "spittingimage.midnightconfig.title": "Spitting Image",
   "spittingimage.midnightconfig.category.text": "Beschreibung",
+
   "spittingimage.midnightconfig.spitdamage": "Spuckschaden",
-  "spittingimage.midnightconfig.enable3dmodel": "Schalte Spucke 3D-Modell ein"
+  "spittingimage.midnightconfig.enable3dmodel": "Schalte Spucke 3D-Modell ein",
+  "spittingimage.midnightconfig.spitcooldown": "Spucken Abklingzeit"
 
 }

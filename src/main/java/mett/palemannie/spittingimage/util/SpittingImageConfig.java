@@ -9,6 +9,11 @@ public class SpittingImageConfig extends MidnightConfig {
 
     @Entry
     public static boolean enable3dmodel = true;
+
+    @Entry(min = 1, max = Integer.MAX_VALUE-1)
+    public static int spitcooldown = 3;
+
     @Comment(category = "text") public static Comment damagedesc;
     @Comment(category  = "text") public static Comment modeldesc;
+    @Comment(category  = "text") public static Comment cooldowndesc;
 }
