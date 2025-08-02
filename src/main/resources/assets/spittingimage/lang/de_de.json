@@ -14,6 +14,8 @@
 
   "spittingimage.midnightconfig.spitdamage": "Spuckschaden",
   "spittingimage.midnightconfig.enable3dmodel": "Schalte Spucke 3D-Modell ein",
-  "spittingimage.midnightconfig.spitcooldown": "Spucken Abklingzeit"
+  "spittingimage.midnightconfig.spitcooldown": "Spucken Abklingzeit",
+
+  "spittingimage.spitcooldown": "Kannst noch nicht spucken, Abklingzeit..."
 
 }

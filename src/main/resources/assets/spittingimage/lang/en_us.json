@@ -14,5 +14,7 @@
 
   "spittingimage.midnightconfig.spitdamage": "Spit damage",
   "spittingimage.midnightconfig.enable3dmodel": "Enable player spit model",
-  "spittingimage.midnightconfig.spitcooldown": "Spit cooldown"
+  "spittingimage.midnightconfig.spitcooldown": "Spit cooldown",
+
+  "spittingimage.spitcooldown": "Can't spit yet, cooldown..."
 }

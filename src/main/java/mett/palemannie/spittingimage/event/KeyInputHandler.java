@@ -18,7 +18,7 @@ import java.util.UUID;
 public class KeyInputHandler {
 
     private static final Map<UUID, Long> cooldownMap = new HashMap<>();
-    private static final long COOLDOWN_TIME = SpittingImageConfig.spitcooldown*50L;
+    private static final long COOLDOWN_TIME = SpittingImageConfig.spitCooldown*50L;
 
     public static final String KEY_CATEGORY_SPIT = "key.category.spittingimage.spit";
     public static final String KEY_SPIT = "key.spittingimage.spit";
