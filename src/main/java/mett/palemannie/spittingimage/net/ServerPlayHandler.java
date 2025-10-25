@@ -21,7 +21,7 @@ public class ServerPlayHandler {
 
     public static void handleSpitting(ServerPlayerEntity player){
 
-        int currentTick = player.getWorld().getServer().getTicks();
+        int currentTick = player.getEntityWorld().getServer().getTicks();
         int cooldown = SpittingImageConfig.spitCooldown; // deine konfigurierbare Zahl
 
         int lastUsed = spitCooldowns.getOrDefault(player.getUuid(), -cooldown - 1);
@@ -36,7 +36,7 @@ public class ServerPlayHandler {
         spitCooldowns.put(player.getUuid(), currentTick);
 
         ///Entity
-        World world = player.getWorld();
+        World world = player.getEntityWorld();
 
         if (world instanceof ServerWorld serverWorld) {
             SpitEntity spitEntity = new SpitEntity(ModEntities.SPIT, serverWorld);
@@ -48,7 +48,7 @@ public class ServerPlayHandler {
         }
 
         ///Sound
-        World lvl = player.getWorld();
+        World lvl = player.getEntityWorld();
         float r = 0.8f + lvl.random.nextFloat() * 0.3f;
         lvl.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_LLAMA_SPIT, SoundCategory.BLOCKS, 1f, r);
     }

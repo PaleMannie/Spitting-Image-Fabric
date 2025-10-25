@@ -3,7 +3,6 @@ package mett.palemannie.spittingimage.entity.custom;
 import mett.palemannie.spittingimage.util.ModDamageTypes;
 import mett.palemannie.spittingimage.util.SpittingImageConfig;
 import net.minecraft.block.AbstractBlock;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
@@ -17,14 +16,12 @@ import net.minecraft.entity.decoration.painting.PaintingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
@@ -54,7 +51,7 @@ public class SpitEntity extends ProjectileEntity {
         double f = this.getZ() + vec3d.z;
         this.updateRotation();
 
-        if (this.getWorld().getStatesInBox(this.getBoundingBox()).noneMatch(AbstractBlock.AbstractBlockState::isAir)) {
+        if (this.getEntityWorld().getStatesInBox(this.getBoundingBox()).noneMatch(AbstractBlock.AbstractBlockState::isAir)) {
 
             this.discard();
         } else if (this.isTouchingWater()) {
@@ -69,7 +66,7 @@ public class SpitEntity extends ProjectileEntity {
 
         if (this.age % 9 == 0) {
 
-            getWorld().addParticleClient(ParticleTypes.SPIT, this.getX(), this.getY() + 0.2, this.getZ(), 0d, 0d, 0d);
+            getEntityWorld().addParticleClient(ParticleTypes.SPIT, this.getX(), this.getY() + 0.2, this.getZ(), 0d, 0d, 0d);
         }
     }
 
@@ -77,7 +74,7 @@ public class SpitEntity extends ProjectileEntity {
 
         Entity owner = this.getOwner();
         Entity target = entityHitResult.getEntity();
-        World world = this.getWorld();
+        World world = this.getEntityWorld();
 
         if (owner instanceof PlayerEntity) {
 
@@ -100,7 +97,7 @@ public class SpitEntity extends ProjectileEntity {
 
                     if(!((ItemFrameEntity) target).getHeldItemStack().isEmpty()){
 
-                        target.getWorld().spawnEntity(new ItemEntity(target.getWorld(), target.getX(), target.getY(), target.getZ(),
+                        target.getEntityWorld().spawnEntity(new ItemEntity(target.getEntityWorld(), target.getX(), target.getY(), target.getZ(),
                                 ((ItemFrameEntity) target).getHeldItemStack().copy()));
                         this.discard();
                         ((ItemFrameEntity) target).setHeldItemStack(ItemStack.EMPTY);
@@ -141,20 +138,20 @@ public class SpitEntity extends ProjectileEntity {
 
     protected void onBlockHit(BlockHitResult blockHitResult) {
         super.onBlockHit(blockHitResult);
-        if (!this.getWorld().isClient) {
+        if (!this.getEntityWorld().isClient()) {
             this.discard();
         }
     }
 
     public void onSpawnPacket(EntitySpawnS2CPacket packet) {
         super.onSpawnPacket(packet);
-        double d = packet.getVelocityX();
-        double e = packet.getVelocityY();
-        double f = packet.getVelocityZ();
+        double d = packet.getVelocity().x;
+        double e = packet.getVelocity().y;
+        double f = packet.getVelocity().z;
 
         for(int i = 0; i < 3; ++i) {
             double g = 0.4 + 0.1 * (double)i;
-            this.getWorld().addParticleClient(ParticleTypes.SPIT, this.getX(), this.getY(), this.getZ(), d * g, e, f * g);
+            this.getEntityWorld().addParticleClient(ParticleTypes.SPIT, this.getX(), this.getY(), this.getZ(), d * g, e, f * g);
         }
 
         this.setVelocity(d, e, f);

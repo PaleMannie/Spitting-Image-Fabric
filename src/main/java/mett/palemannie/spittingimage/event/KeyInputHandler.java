@@ -9,6 +9,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.HashMap;
@@ -20,7 +21,7 @@ public class KeyInputHandler {
     private static final Map<UUID, Long> cooldownMap = new HashMap<>();
     private static final long COOLDOWN_TIME = SpittingImageConfig.spitCooldown*50L;
 
-    public static final String KEY_CATEGORY_SPIT = "key.category.spittingimage.spit";
+    public static final String KEY_CATEGORY_SPIT = "spit";
     public static final String KEY_SPIT = "key.spittingimage.spit";
 
     public static KeyBinding spitKey;
@@ -47,7 +48,7 @@ public class KeyInputHandler {
 
     public static void register(){
         spitKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(KEY_SPIT, InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_COMMA, KEY_CATEGORY_SPIT));
+                GLFW.GLFW_KEY_COMMA, new KeyBinding.Category(Identifier.of(KEY_CATEGORY_SPIT))));
         registerKeyInputs();
     }
 }

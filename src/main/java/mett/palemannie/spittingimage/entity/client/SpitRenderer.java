@@ -4,12 +4,12 @@ import mett.palemannie.spittingimage.SpittingImage;
 import mett.palemannie.spittingimage.entity.custom.SpitEntity;
 import mett.palemannie.spittingimage.util.SpittingImageConfig;
 import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.command.ModelCommandRenderer;
+import net.minecraft.client.render.command.OrderedRenderCommandQueue;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.state.LlamaSpitEntityRenderState;
+import net.minecraft.client.render.state.CameraRenderState;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
@@ -23,24 +23,20 @@ public class SpitRenderer extends EntityRenderer<SpitEntity, LlamaSpitEntityRend
         this.model = new SpitModel(context.getPart(SpitModel.SPIT));
     }
 
-    public void render(LlamaSpitEntityRenderState llamaSpitEntityRenderState, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
-
+    @Override
+    public void render(LlamaSpitEntityRenderState renderState, MatrixStack matrices, OrderedRenderCommandQueue queue, CameraRenderState cameraState) {
 
         if(SpittingImageConfig.enable3dmodel) {
-            matrixStack.push();
 
-            matrixStack.translate(0.0F, 0.1F, 0.0F);
-            matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(llamaSpitEntityRenderState.yaw - 90f));
-            matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(llamaSpitEntityRenderState.pitch));
+            matrices.push();
+            matrices.translate(0.0F, 0.15F, 0.0F);
+            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(renderState.yaw - 90.0F));
+            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(renderState.pitch));
+            queue.submitModel(this.model, renderState, matrices, this.model.getLayer(TEXTURE), renderState.light, OverlayTexture.DEFAULT_UV, renderState.outlineColor, (ModelCommandRenderer.CrumblingOverlayCommand)null);
+            matrices.pop();
 
-            this.model.setAngles(llamaSpitEntityRenderState);
-            VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntityCutout(TEXTURE));
-            this.model.render(matrixStack, vertexConsumer, i, OverlayTexture.DEFAULT_UV);
-
-            matrixStack.pop();
-
-            super.render(llamaSpitEntityRenderState, matrixStack, vertexConsumerProvider, i);
         }
+        super.render(renderState, matrices, queue, cameraState);
     }
 
     public LlamaSpitEntityRenderState createRenderState() {
