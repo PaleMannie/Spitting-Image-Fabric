@@ -7,7 +7,7 @@ import mett.palemannie.spittingimage.net.SpitC2SPacket;
 import mett.palemannie.spittingimage.util.SpittingImageConfig;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +27,7 @@ public class SpittingImage implements ModInitializer {
 		SpitC2SPacket.initializePacket();
 		ServerPlayNetworking.registerGlobalReceiver(SpitC2SPacket.ID, (payload, context) -> {
 			context.server().execute(() -> {
-				ServerPlayerEntity serverPlayer = context.player();
+				ServerPlayer serverPlayer = context.player();
 				ServerPlayHandler.handleSpitting(serverPlayer);
 			});
 		});

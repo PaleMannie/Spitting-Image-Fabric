@@ -2,158 +2,158 @@ package mett.palemannie.spittingimage.entity.custom;
 
 import mett.palemannie.spittingimage.util.ModDamageTypes;
 import mett.palemannie.spittingimage.util.SpittingImageConfig;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageTypes;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.decoration.GlowItemFrameEntity;
-import net.minecraft.entity.decoration.ItemFrameEntity;
-import net.minecraft.entity.decoration.painting.PaintingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.decoration.GlowItemFrame;
+import net.minecraft.world.entity.decoration.ItemFrame;
+import net.minecraft.world.entity.decoration.painting.Painting;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 
-public class SpitEntity extends ProjectileEntity {
+public class SpitEntity extends Projectile {
 
-    public SpitEntity(EntityType<SpitEntity> entityEntityType, World world) {
+    public SpitEntity(EntityType<SpitEntity> entityEntityType, Level world) {
         super(entityEntityType, world);
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) { }
+    protected void defineSynchedData(SynchedEntityData.Builder builder) { }
 
     @Override
     public void tick() {
         super.tick();
 
-        Vec3d vec3d = this.getVelocity();
-        HitResult hitResult = ProjectileUtil.getCollision(this, this::canHit);
-        this.hitOrDeflect(hitResult);
+        Vec3 vec3d = this.getDeltaMovement();
+        HitResult hitResult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
+        this.hitTargetOrDeflectSelf(hitResult);
 
         double d = this.getX() + vec3d.x;
         double e = this.getY() + vec3d.y;
         double f = this.getZ() + vec3d.z;
         this.updateRotation();
 
-        if (this.getEntityWorld().getStatesInBox(this.getBoundingBox()).noneMatch(AbstractBlock.AbstractBlockState::isAir)) {
+        if (this.level().getBlockStates(this.getBoundingBox()).noneMatch(BlockBehaviour.BlockStateBase::isAir)) {
 
             this.discard();
-        } else if (this.isTouchingWater()) {
+        } else if (this.isInWater()) {
 
             this.discard();
         } else {
 
-            this.setVelocity(vec3d.multiply(0.99f));
+            this.setDeltaMovement(vec3d.scale(0.99f));
             this.applyGravity();
-            this.setPosition(d, e, f);
+            this.setPos(d, e, f);
         }
 
-        if (this.age % 9 == 0) {
+        if (this.tickCount % 9 == 0) {
 
-            getEntityWorld().addParticleClient(ParticleTypes.SPIT, this.getX(), this.getY() + 0.2, this.getZ(), 0d, 0d, 0d);
+            level().addParticle(ParticleTypes.SPIT, this.getX(), this.getY() + 0.2, this.getZ(), 0d, 0d, 0d);
         }
     }
 
-    protected void onEntityHit(EntityHitResult entityHitResult) {
+    protected void onHitEntity(EntityHitResult entityHitResult) {
 
         Entity owner = this.getOwner();
         Entity target = entityHitResult.getEntity();
-        World world = this.getEntityWorld();
+        Level world = this.level();
 
-        if (owner instanceof PlayerEntity) {
+        if (owner instanceof Player) {
 
-            if(world instanceof ServerWorld serverWorld) {
+            if(world instanceof ServerLevel serverWorld) {
 
                 if(target instanceof LivingEntity) {
 
                     float damageAmount = SpittingImageConfig.spitdamage;
 
-                    DamageSource source = world.getDamageSources().create(ModDamageTypes.SPIT_DAMAGE, null, null);
-                    DamageSource source2 = world.getDamageSources().create(DamageTypes.PLAYER_ATTACK, this.getOwner(), this.getOwner());
+                    DamageSource source = world.damageSources().source(ModDamageTypes.SPIT_DAMAGE, null, null);
+                    DamageSource source2 = world.damageSources().source(DamageTypes.PLAYER_ATTACK, this.getOwner(), this.getOwner());
 
                     if (!(target == this.getOwner())) {
 
-                        entityHitResult.getEntity().damage(serverWorld, source2, 0.000000000001f);
+                        entityHitResult.getEntity().hurtServer(serverWorld, source2, 0.000000000001f);
                     }
-                    entityHitResult.getEntity().damage(serverWorld, source, damageAmount);
+                    entityHitResult.getEntity().hurtServer(serverWorld, source, damageAmount);
                 }
-                else if(target instanceof ItemFrameEntity){
+                else if(target instanceof ItemFrame){
 
-                    if(!((ItemFrameEntity) target).getHeldItemStack().isEmpty()){
+                    if(!((ItemFrame) target).getItem().isEmpty()){
 
-                        target.getEntityWorld().spawnEntity(new ItemEntity(target.getEntityWorld(), target.getX(), target.getY(), target.getZ(),
-                                ((ItemFrameEntity) target).getHeldItemStack().copy()));
+                        target.level().addFreshEntity(new ItemEntity(target.level(), target.getX(), target.getY(), target.getZ(),
+                                ((ItemFrame) target).getItem().copy()));
                         this.discard();
-                        ((ItemFrameEntity) target).setHeldItemStack(ItemStack.EMPTY);
-                        serverWorld.playSoundFromEntity(target, target, SoundEvents.ENTITY_ITEM_FRAME_REMOVE_ITEM, SoundCategory.AMBIENT, 1f, 1f);
+                        ((ItemFrame) target).setItem(ItemStack.EMPTY);
+                        serverWorld.playSound(target, target, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.AMBIENT, 1f, 1f);
 
                     }
                     else {
 
                         this.discard();
                         target.kill(serverWorld);
-                        if(target instanceof GlowItemFrameEntity) {
+                        if(target instanceof GlowItemFrame) {
 
-                            target.dropItem(serverWorld,Items.GLOW_ITEM_FRAME);
-                            world.playSound(target, target.getX(), target.getY(), target.getZ(), SoundEvents.ENTITY_GLOW_ITEM_FRAME_BREAK, SoundCategory.AMBIENT, 1f,1f);
+                            target.spawnAtLocation(serverWorld,Items.GLOW_ITEM_FRAME);
+                            world.playSound(target, target.getX(), target.getY(), target.getZ(), SoundEvents.GLOW_ITEM_FRAME_BREAK, SoundSource.AMBIENT, 1f,1f);
                         }
                         else {
 
-                            target.dropItem(serverWorld,Items.ITEM_FRAME);
-                            world.playSound(target, target.getX(), target.getY(), target.getZ(), SoundEvents.ENTITY_ITEM_FRAME_BREAK, SoundCategory.AMBIENT, 1f,1f);
+                            target.spawnAtLocation(serverWorld,Items.ITEM_FRAME);
+                            world.playSound(target, target.getX(), target.getY(), target.getZ(), SoundEvents.ITEM_FRAME_BREAK, SoundSource.AMBIENT, 1f,1f);
                         }
                     }
                 }
-                else if(target instanceof PaintingEntity){
+                else if(target instanceof Painting){
 
                     this.discard();
-                    target.dropItem(serverWorld, Items.PAINTING);
+                    target.spawnAtLocation(serverWorld, Items.PAINTING);
                     target.kill(serverWorld);
-                    world.playSound(target, target.getX(), target.getY(), target.getZ(), SoundEvents.ENTITY_PAINTING_BREAK, SoundCategory.AMBIENT, 1f,1f);
+                    world.playSound(target, target.getX(), target.getY(), target.getZ(), SoundEvents.PAINTING_BREAK, SoundSource.AMBIENT, 1f,1f);
                 }
             }
         }
         this.discard();
     }
 
-    protected double getGravity() {
+    protected double getDefaultGravity() {
         return 0.05;
     }
 
-    protected void onBlockHit(BlockHitResult blockHitResult) {
-        super.onBlockHit(blockHitResult);
-        if (!this.getEntityWorld().isClient()) {
+    protected void onHitBlock(BlockHitResult blockHitResult) {
+        super.onHitBlock(blockHitResult);
+        if (!this.level().isClientSide()) {
             this.discard();
         }
     }
 
-    public void onSpawnPacket(EntitySpawnS2CPacket packet) {
-        super.onSpawnPacket(packet);
-        double d = packet.getVelocity().x;
-        double e = packet.getVelocity().y;
-        double f = packet.getVelocity().z;
+    public void recreateFromPacket(ClientboundAddEntityPacket packet) {
+        super.recreateFromPacket(packet);
+        double d = packet.getMovement().x;
+        double e = packet.getMovement().y;
+        double f = packet.getMovement().z;
 
         for(int i = 0; i < 3; ++i) {
             double g = 0.4 + 0.1 * (double)i;
-            this.getEntityWorld().addParticleClient(ParticleTypes.SPIT, this.getX(), this.getY(), this.getZ(), d * g, e, f * g);
+            this.level().addParticle(ParticleTypes.SPIT, this.getX(), this.getY(), this.getZ(), d * g, e, f * g);
         }
 
-        this.setVelocity(d, e, f);
+        this.setDeltaMovement(d, e, f);
     }
 }

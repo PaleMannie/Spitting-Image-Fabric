@@ -3,30 +3,30 @@ package mett.palemannie.spittingimage.net;
 import mett.palemannie.spittingimage.SpittingImage;
 import mett.palemannie.spittingimage.entity.ModEntities;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.Identifier;
 
-public record SpitC2SPacket() implements CustomPayload {
+public record SpitC2SPacket() implements CustomPacketPayload {
 
-    private static Identifier spitId = Registries.ENTITY_TYPE.getId(ModEntities.SPIT);
-    public static final CustomPayload.Id<SpitC2SPacket> ID = new CustomPayload.Id<>(Identifier.of(SpittingImage.MODID, spitId.getPath()));
-    public static final PacketCodec<RegistryByteBuf, SpitC2SPacket> PACKET_CODEC = PacketCodec.of(SpitC2SPacket::encode, SpitC2SPacket::decode);
+    private static Identifier spitId = BuiltInRegistries.ENTITY_TYPE.getKey(ModEntities.SPIT);
+    public static final CustomPacketPayload.Type<SpitC2SPacket> ID = new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(SpittingImage.MODID, spitId.getPath()));
+    public static final StreamCodec<RegistryFriendlyByteBuf, SpitC2SPacket> PACKET_CODEC = StreamCodec.ofMember(SpitC2SPacket::encode, SpitC2SPacket::decode);
 
     @Override
-    public Id<? extends CustomPayload> getId() {
+    public Type<? extends CustomPacketPayload> type() {
         return ID;
     }
 
-    public static void encode(SpitC2SPacket packet, RegistryByteBuf buf) {}
+    public static void encode(SpitC2SPacket packet, RegistryFriendlyByteBuf buf) {}
 
-    public static SpitC2SPacket decode(RegistryByteBuf buf) {
+    public static SpitC2SPacket decode(RegistryFriendlyByteBuf buf) {
         return new SpitC2SPacket();
     }
 
     public static void initializePacket() {
-        PayloadTypeRegistry.playC2S().register(SpitC2SPacket.ID, SpitC2SPacket.PACKET_CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(SpitC2SPacket.ID, SpitC2SPacket.PACKET_CODEC);
     }
 }

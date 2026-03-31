@@ -1,17 +1,16 @@
-package mett.palemannie.spittingimage.event;
+package mett.palemannie.spittingimage;
 
 import mett.palemannie.spittingimage.net.SpitC2SPacket;
 import mett.palemannie.spittingimage.util.SpittingImageConfig;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.LivingEntity;
 import org.lwjgl.glfw.GLFW;
-
+import com.mojang.blaze3d.platform.InputConstants;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -24,18 +23,18 @@ public class KeyInputHandler {
     public static final String KEY_CATEGORY_SPIT = "spit";
     public static final String KEY_SPIT = "key.spittingimage.spit";
 
-    public static KeyBinding spitKey;
+    public static KeyMapping spitKey;
 
     public static void registerKeyInputs(){
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
 
-            LivingEntity player = MinecraftClient.getInstance().player;
+            LivingEntity player = Minecraft.getInstance().player;
             if (player == null) return;
             if (player.isSpectator()) return;
 
-            if(spitKey.wasPressed()){
+            if(spitKey.consumeClick()){
 
-                UUID playerId = player.getUuid();
+                UUID playerId = player.getUUID();
                 long currentTime = System.currentTimeMillis();
 
                 if (!cooldownMap.containsKey(playerId) || (currentTime - cooldownMap.get(playerId) >= COOLDOWN_TIME)) {
@@ -47,8 +46,8 @@ public class KeyInputHandler {
     }
 
     public static void register(){
-        spitKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(KEY_SPIT, InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_COMMA, new KeyBinding.Category(Identifier.of(KEY_CATEGORY_SPIT))));
+        spitKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(KEY_SPIT, InputConstants.Type.KEYSYM,
+                GLFW.GLFW_KEY_COMMA, new KeyMapping.Category(Identifier.parse(KEY_CATEGORY_SPIT))));
         registerKeyInputs();
     }
 }
